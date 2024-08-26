@@ -36,8 +36,12 @@ SECRET_KEY = 'django-insecure-yr!26q@#@v8=yay==*-tg4#nm26vu-4rlxfr@6ojgr44p2-#m5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+]
 
+# If you want to allow all origins:
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -50,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'core',
+    'accounts',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -65,6 +70,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'petsgram.urls'
+AUTH_USER_MODEL = 'accounts.User'
 
 TEMPLATES = [
     {
