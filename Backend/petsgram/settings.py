@@ -11,6 +11,17 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from datetime import timedelta
+from pathlib import Path
+
+import cloudinary
+import cloudinary.api
+import cloudinary.uploader
+import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,9 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'core',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +84,50 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'petsgram.wsgi.application'
 
+SIMPLE_JWT = {
+  'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+  'REFRESH_TOKEN_LIFETIME': timedelta(hours=48),
+  'ROTATE_REFRESH_TOKENS': False,
+  'BLACKLIST_AFTER_ROTATION': True,
+  'UPDATE_LAST_LOGIN': False,
+
+  'ALGORITHM': 'HS256',
+  'SIGNING_KEY': SECRET_KEY,
+  'VERIFYING_KEY': None,
+  'AUDIENCE': None,
+  'ISSUER': None,
+
+  'AUTH_HEADER_TYPES': ('Bearer',),
+  'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+  'USER_ID_FIELD': 'id',
+  'USER_ID_CLAIM': 'user_id',
+  'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+  'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+  'TOKEN_TYPE_CLAIM': 'token_type',
+
+  'JTI_CLAIM': 'jti',
+
+  'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+  'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+  'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+
+  # custom
+  'AUTH_COOKIE': 'access_token',
+  'AUTH_COOKIE_REFRESH': 'refresh_token',
+  'AUTH_COOKIE_DOMAIN': None,
+  'AUTH_COOKIE_SECURE': False,
+  'AUTH_COOKIE_HTTP_ONLY' : True,
+  'AUTH_COOKIE_PATH': '/',
+  'AUTH_COOKIE_SAMESITE': 'Lax',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -78,6 +137,20 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+
+# Cloudinary - Django Integration
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET_KEY'),
+)
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET_KEY'),
 }
 
 
@@ -116,6 +189,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+MEDIA_URL = '/media/'
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
