@@ -2,31 +2,51 @@ import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import axios from "axios";
 
 import { images } from "../../constants";
 import CustomButton from "@/components/CustomButton";
 import FormField from "@/components/FormField";
+import { useAuth } from "@/context/GlobalProvider";
 
 const SignUp = () => {
-
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
+  const { signIn } = useAuth();
+
   const submit = async () => {
-    if (form.username === "" || form.email === "" || form.password === "") {
+    if (form.username === "" || form.email === "" || form.password === "" || form.confirmPassword === "") {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
     setSubmitting(true);
     try {
-      router.replace("/home");
+      const response = await axios.post("http://127.0.0.1:8000/api/user/register/", {
+        username: form.username,
+        email: form.email,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+      });
+
+      if (response.status === 201) {
+        await signIn(response.data);
+        router.replace("/home");
+      }
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      if (error.response) {
+        console.log('Error:', error.response.statusText);
+        Alert.alert("Error", error.response.data.detail || "An error occurred during sign-up.");
+      } else {
+        console.log('Error: something went wrong');
+        Alert.alert("Error", "Unable to connect to the server.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -48,7 +68,7 @@ const SignUp = () => {
           />
 
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Sign Up to Aora
+            Sign Up to Petsgram
           </Text>
 
           <FormField
@@ -73,6 +93,13 @@ const SignUp = () => {
             otherStyles="mt-7"
           />
 
+          <FormField
+            title="Confirm Password"
+            value={form.confirmPassword}
+            handleChangeText={(e: string) => setForm({ ...form, confirmPassword: e })}
+            otherStyles="mt-7"
+          />
+
           <CustomButton
             title="Sign Up"
             handlePress={submit}
@@ -85,7 +112,7 @@ const SignUp = () => {
               Have an account already?
             </Text>
             <Link
-              href="Sign-in"
+              href="/sign-in"
               className="text-lg font-psemibold text-secondary"
             >
               Login

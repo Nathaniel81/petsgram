@@ -2,10 +2,12 @@ import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Alert, Dimensions, Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import axios from "axios";
 
 import CustomButton from "@/components/CustomButton";
 import FormField from "@/components/FormField";
 import { images } from "../../constants";
+import { useAuth } from "@/context/GlobalProvider";
 
 const SignIn = () => {
   const [isSubmitting, setSubmitting] = useState(false);
@@ -14,18 +16,35 @@ const SignIn = () => {
     password: "",
   });
 
+  const { signIn } = useAuth();
+
   const submit = async () => {
     if (form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
+      return;
     }
 
     setSubmitting(true);
 
     try {
-      Alert.alert("Success", "User signed in successfully");
-      router.replace("/home");
+      const response = await axios.post("http://127.0.0.1:8000/api/user/login/", {
+        email: form.email,
+        password: form.password,
+      });
+
+      if (response.status === 200) {
+        await signIn(response.data);
+        Alert.alert("Success", "User signed in successfully");
+        router.replace("/home");
+      }
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      if (error.response) {
+        console.log('Error:', error.response.statusText);
+        Alert.alert("Error", error.response.data.detail || "Invalid email or password.");
+      } else {
+        console.log('Error: something went wrong');
+        Alert.alert("Error", "Unable to connect to the server.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -47,7 +66,7 @@ const SignIn = () => {
           />
 
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Log in to Aora
+            Log in to Petsgram
           </Text>
 
           <FormField

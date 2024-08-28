@@ -1,6 +1,7 @@
 import { Stack, SplashScreen } from 'expo-router'
 import { useFonts } from "expo-font";
 import { useEffect } from 'react';
+import { AuthProvider } from '@/context/GlobalProvider';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,11 +28,13 @@ const _layout = () => {
 
 
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-    </Stack>
+    <AuthProvider>  
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+      </Stack>
+    </AuthProvider>
   )
 }
 

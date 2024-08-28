@@ -6,12 +6,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../constants";
 import CustomButton from "@/components/CustomButton";
 import Loader from "@/components/Loader";
+import { useAuth } from "@/context/GlobalProvider";
 
 const Welcome = () => {
-  const isLogged = false;
   const loading = false;
+  const { user } = useAuth()
 
-  // if (isLogged) return <Redirect href="/" />;
+  if (user) return <Redirect href="/" />;
+  console.log(user);
 
   return (
     <SafeAreaView className="bg-primary h-full">
