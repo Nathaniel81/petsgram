@@ -56,20 +56,15 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
     confirmPassword = serializers.CharField(write_only=True, required=True)
-    tokens = serializers.SerializerMethodField(read_only=True)
-    token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
         fields = [
             'id', 
             'username', 
-            'name', 
             'email', 
             'password', 
             'confirmPassword', 
-            'tokens', 
-            'token'
         ]
         read_only_fields = ['id']
 
@@ -81,19 +76,18 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def save(self, validated_data):
         validated_data.pop('confirmPassword')
         user = User.objects.create(
-            # name=validated_data['name'],
             username=validated_data['username'],
-            email=validated_data['email']
+            email=validated_data['email'],
         )
         user.set_password(validated_data['password'])
         user.save()
-        
+
         validated_data['id'] = user.id
 
         refresh_token = RefreshToken.for_user(user)
         access_token = str(refresh_token.access_token)
 
         validated_data['access_token'] = access_token
-        validated_data['refresh_token'] = refresh_token
+        validated_data['refresh_token'] = str(refresh_token)
 
         return validated_data
