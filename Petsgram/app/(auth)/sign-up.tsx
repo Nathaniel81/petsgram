@@ -28,7 +28,8 @@ const SignUp = () => {
 
     setSubmitting(true);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/user/register/", {
+      const response = await axios.post("https://great-rules-burn.loca.lt/api/user/register/", {
+      // const response = await axios.post("http://127.0.0.1:8000/api/user/register/", {
         username: form.username,
         email: form.email,
         password: form.password,

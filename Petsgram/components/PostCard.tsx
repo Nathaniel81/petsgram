@@ -7,14 +7,14 @@ import {
 
 import { icons } from "../constants";
 
-interface PostCardProps {
+interface postCardProps {
   title: string,
   creator: string,
   avatar: string,
-  thumbnail: string,
+  photo: string,
 }
 
-const PostCard = ({ title, creator, avatar, thumbnail }: PostCardProps) => {
+const PostCard = ({ title, creator, avatar, photo }: postCardProps) => {
   return (
     <View className="flex flex-col items-center px-4 mb-14">
       <View className="flex flex-row gap-3 items-start">
@@ -53,7 +53,7 @@ const PostCard = ({ title, creator, avatar, thumbnail }: PostCardProps) => {
         className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
       >
         <Image
-          source={{ uri: thumbnail }}
+          source={{ uri: photo }}
           className="w-full h-full rounded-xl mt-3"
           resizeMode="cover"
         />
