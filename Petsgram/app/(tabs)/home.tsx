@@ -1,31 +1,31 @@
-import { useState, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, Image, RefreshControl, Text, View, Alert } from "react-native";
 import axios from "axios";
-
-import { images } from "../../constants";
-import { PostCard, EmptyState } from "@/components";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, FlatList, Image, RefreshControl, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { EmptyState, PostCard } from "@/components";
 import { useAuth } from "@/context/GlobalProvider";
 import { IPost } from "@/types";
+import { images } from "../../constants";
 
 const Home = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true); // Add a loading state
   const { user } = useAuth();
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('https://great-rules-burn.loca.lt/api/posts/');
-      // const response = await axios.get('http://127.0.0.1:8000/api/posts/');
+      const response = await axios.get("http://127.0.0.1:8000/api/posts/");
       setPosts(response.data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
       Alert.alert("Error", "Could not fetch posts. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
     }
   };
 
   useEffect(() => {
-    console.log(user?.access_token)
     fetchPosts();
   }, []);
 
@@ -35,8 +35,16 @@ const Home = () => {
     setRefreshing(false);
   };
 
+  if (loading) {
+    return (
+      <SafeAreaView className="bg-primary flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#ffffff" />
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <SafeAreaView className="bg-primary">
+    <SafeAreaView className="bg-primary flex-1">
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}

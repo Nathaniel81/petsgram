@@ -5,6 +5,7 @@ import React, {
   ReactNode 
 } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 
 interface AuthContextType {
   user: any;
@@ -19,12 +20,37 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
+
+  const setSecureItem = async (key: string, value: string) => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value); // Use localStorage for the web
+    } else {
+      await SecureStore.setItemAsync(key, value);
+    }
+  };
+
+  const getSecureItem = async (key: string) => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    } else {
+      return await SecureStore.getItemAsync(key);
+    }
+  };
+
+  const deleteSecureItem = async (key: string) => {
+    if (Platform.OS === 'web') {
+      localStorage.removeItem(key);
+    } else {
+      await SecureStore.deleteItemAsync(key);
+    }
+  };
 
   const signIn = async (userData: any) => {
+    console.log('USER DATA: ', userData)
     try {
-      await SecureStore.setItemAsync('access_token', userData.access_token);
-      await SecureStore.setItemAsync('refresh_token', userData.refresh_token);
+      await setSecureItem('access', String(userData.access));
+      await setSecureItem('refresh', String(userData.refresh));
       setUser(userData);
     } catch (e) {
       console.error('Failed to sign in:', e);
@@ -33,13 +59,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = async () => {
     try {
-      await SecureStore.deleteItemAsync('access_token');
-      await SecureStore.deleteItemAsync('refresh_token');
+      await deleteSecureItem('access_token');
+      await deleteSecureItem('refresh_token');
       setUser(null);
     } catch (e) {
       console.error('Failed to sign out:', e);
     }
   };
+
+  const loadUserData = async () => {
+    try {
+      const storedUser = await getSecureItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (e) {
+      console.error('Failed to load user data:', e);
+    }
+  };
+
+  React.useEffect(() => {
+    loadUserData();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, signIn, signOut }}>

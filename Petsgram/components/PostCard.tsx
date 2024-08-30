@@ -5,7 +5,7 @@ import {
   Image
 } from "react-native";
 
-import { icons } from "../constants";
+import { icons, images } from "../constants";
 
 interface postCardProps {
   title: string,
@@ -21,7 +21,7 @@ const PostCard = ({ title, creator, avatar, photo }: postCardProps) => {
         <View className="flex justify-center items-center flex-row flex-1">
           <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
             <Image
-              source={{ uri: avatar }}
+              source={avatar ? { uri: avatar } : images.profilePlaceholder}
               className="w-full h-full rounded-lg"
               resizeMode="cover"
             />

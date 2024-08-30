@@ -1,12 +1,105 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { useAuth } from "@/context/GlobalProvider";
+import { IPost } from "@/types";
+import axios from "axios";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Alert, FlatList, Image, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { EmptyState, InfoBox, PostCard } from "../../components";
+import { icons, images } from "../../constants";
 
-const profile = () => {
+const Profile = () => {
+  const { user, signOut } = useAuth();
+  const [userPosts, setUserPosts] = useState<IPost[]>([]);
+
+  const logout = async () => {
+    await signOut();
+    router.replace("/sign-in");
+  };
+
+  const fetchPosts = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/posts/user/", {
+        headers: {
+          Authorization: `Bearer ${user?.access}`,
+        },
+      });
+      setUserPosts(response.data);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+      Alert.alert("Error", "Could not fetch posts. Please try again.");
+    }
+  }
+
+  useEffect(() => {
+    fetchPosts();
+    console.log(user);
+  }, []);
+
   return (
-	<View>
-	  <Text>profile</Text>
-	</View>
-  )
-}
+    <SafeAreaView className="bg-primary h-full">
+      <FlatList
+        data={userPosts}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <PostCard
+            title={item.title}
+            photo={item.photo}
+            creator={item.creator.username}
+            avatar={item.creator.profile_picture}
+          />
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="No Videos Found"
+            subtitle="No videos found for this profile"
+          />
+        )}
+        ListHeaderComponent={() => (
+          <View className="w-full flex justify-center items-center mt-6 mb-12 px-4">
+            <TouchableOpacity
+              onPress={logout}
+              className="flex w-full items-end mb-10"
+            >
+              <Image
+                source={icons.logout}
+                resizeMode="contain"
+                className="w-6 h-6"
+              />
+            </TouchableOpacity>
 
-export default profile
+            <View className="w-16 h-16 border border-secondary rounded-lg flex justify-center items-center">
+              <Image
+                source={user?.profile_picture ? { uri: user?.profile_picture } : images.profilePlaceholder}
+                className="w-[90%] h-[90%] rounded-lg"
+                resizeMode="cover"
+              />
+            </View>
+
+            <InfoBox
+              title={user?.username}
+              containerStyles="mt-5"
+              titleStyles="text-lg"
+            />
+
+            <View className="mt-5 flex flex-row">
+              <InfoBox
+                title={userPosts.length.toString()}
+                subtitle="Posts"
+                titleStyles="text-xl"
+                containerStyles="mr-10"
+              />
+              <InfoBox
+                title="1.2k"
+                subtitle="Followers"
+                titleStyles="text-xl"
+              />
+            </View>
+          </View>
+        )}
+      />
+    </SafeAreaView>
+  );
+};
+
+export default Profile;

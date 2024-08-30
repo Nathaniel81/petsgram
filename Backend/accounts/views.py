@@ -40,8 +40,8 @@ class RegistrationView(generics.CreateAPIView):
         access_token = serialized_data.get('access_token')
         refresh_token = serialized_data.get('refresh_token')
 
-        response_data['access_token'] = access_token
-        response_data['refresh_token'] = refresh_token
+        response_data['access'] = access_token
+        response_data['refresh'] = refresh_token
 
         return Response(response_data, status=status.HTTP_201_CREATED)
 

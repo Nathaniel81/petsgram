@@ -13,12 +13,11 @@ class PostSerializer(serializers.ModelSerializer):
             'id',
             'creator',
             'photo',
-            'createdAt',
-            'updatedAt',
+            'created_at',
         ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        if instance.file:
+        if instance.photo:
             representation['photo'] = cloudinary_url(instance.photo.public_id, secure=True)[0]
         return representation

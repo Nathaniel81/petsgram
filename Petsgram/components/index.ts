@@ -3,6 +3,7 @@ import FormField from "./FormField";
 import CustomButton from "./CustomButton";
 import Loader from "./Loader";
 import EmptyState from "./EmptyState";
+import InfoBox from "./InfoBox";
 
 export {
   PostCard,
@@ -10,4 +11,5 @@ export {
   CustomButton,
   Loader,
   EmptyState,
+  InfoBox
 };

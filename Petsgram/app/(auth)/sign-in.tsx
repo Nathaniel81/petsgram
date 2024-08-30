@@ -27,13 +27,14 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      const response = await axios.post("https://great-rules-burn.loca.lt/api/user/login/", {
-      // const response = await axios.post("http://127.0.0.1:8000/api/user/login/", {
+      // const response = await axios.post("https://great-rules-burn.loca.lt/api/user/login/", {
+      const response = await axios.post("http://127.0.0.1:8000/api/user/login/", {
         email: form.email,
         password: form.password,
       });
 
       if (response.status === 200) {
+        console.log('RESPONSE: ', response.data)
         await signIn(response.data);
         Alert.alert("Success", "User signed in successfully");
         router.replace("/home");

@@ -39,8 +39,10 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "*"
     ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8178",
+]
 
-# If you want to allow all origins:
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
