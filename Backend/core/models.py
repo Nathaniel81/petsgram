@@ -4,7 +4,7 @@ from cloudinary.models import CloudinaryField
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    photo = CloudinaryField('image', null=True, blank=True)
+    image = CloudinaryField('image', null=True, blank=True)
     creator = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

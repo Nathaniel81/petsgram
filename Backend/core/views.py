@@ -14,7 +14,7 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-      print('User: ', self.request.user)
+      print(self.request.data)
       serializer.save(creator=self.request.user)
 
 class UserPostListView(APIView):
