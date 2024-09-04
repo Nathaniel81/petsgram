@@ -8,6 +8,6 @@ export interface IUser {
 export interface IPost {
 	id: string;
 	title: string;
-	photo: string;
+	image: string;
 	creator: IUser;
   }

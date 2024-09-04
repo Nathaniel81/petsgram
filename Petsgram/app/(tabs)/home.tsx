@@ -10,12 +10,13 @@ import { images } from "../../constants";
 const Home = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true); // Add a loading state
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/posts/");
+      // const response = await axios.get("http://127.0.0.1:8000/api/posts/");
+      const response = await axios.get("https://few-keys-decide.loca.lt/api/posts/");
       setPosts(response.data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
@@ -51,7 +52,7 @@ const Home = () => {
         renderItem={({ item }) => (
           <PostCard
             title={item.title}
-            photo={item.photo}
+            photo={item.image}
             creator={item.creator.username}
             avatar={item.creator.profile_picture}
           />

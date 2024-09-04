@@ -27,24 +27,21 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      // const response = await axios.post("https://great-rules-burn.loca.lt/api/user/login/", {
-      const response = await axios.post("http://127.0.0.1:8000/api/user/login/", {
+      const response = await axios.post("https://few-keys-decide.loca.lt/api/user/login/", {
+      // const response = await axios.post("http://127.0.0.1:8000/api/user/login/", {
         email: form.email,
         password: form.password,
       });
 
       if (response.status === 200) {
-        console.log('RESPONSE: ', response.data)
         await signIn(response.data);
         Alert.alert("Success", "User signed in successfully");
         router.replace("/home");
       }
     } catch (error: any) {
       if (error.response) {
-        console.log('Error:', error.response.statusText);
         Alert.alert("Error", error.response.data.detail || "Invalid email or password.");
       } else {
-        console.log('Error: something went wrong');
         Alert.alert("Error", "Unable to connect to the server.");
       }
     } finally {

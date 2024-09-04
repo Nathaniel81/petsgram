@@ -32,8 +32,8 @@ const Profile = () => {
   }
 
   useEffect(() => {
+    console.log(user)
     fetchPosts();
-    console.log(user);
   }, []);
 
   return (
@@ -44,7 +44,7 @@ const Profile = () => {
         renderItem={({ item }) => (
           <PostCard
             title={item.title}
-            photo={item.photo}
+            photo={item.image}
             creator={item.creator.username}
             avatar={item.creator.profile_picture}
           />

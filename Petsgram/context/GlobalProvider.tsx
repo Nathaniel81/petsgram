@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signIn = async (userData: any) => {
-    console.log('USER DATA: ', userData)
     try {
       await setSecureItem('access', String(userData.access));
       await setSecureItem('refresh', String(userData.refresh));
