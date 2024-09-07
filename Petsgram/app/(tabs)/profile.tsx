@@ -19,7 +19,8 @@ const Profile = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/posts/user/", {
+      const response = await axios.get("https://social-pans-retire.loca.lt/api/posts/user/", {
+      // const response = await axios.get("http://127.0.0.1:8000/api/posts/user/", {
         headers: {
           Authorization: `Bearer ${user?.access}`,
         },

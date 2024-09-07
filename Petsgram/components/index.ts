@@ -4,6 +4,7 @@ import CustomButton from "./CustomButton";
 import Loader from "./Loader";
 import EmptyState from "./EmptyState";
 import InfoBox from "./InfoBox";
+import Category from "./Category";
 
 export {
   PostCard,
@@ -11,5 +12,6 @@ export {
   CustomButton,
   Loader,
   EmptyState,
-  InfoBox
+  InfoBox,
+  Category
 };
