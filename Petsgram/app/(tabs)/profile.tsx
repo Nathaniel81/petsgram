@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Alert, FlatList, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EmptyState, InfoBox, PostCard } from "../../components";
-import { icons, images } from "../../constants";
+import { icons, images, config } from "../../constants";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
@@ -19,8 +19,7 @@ const Profile = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("https://social-pans-retire.loca.lt/api/posts/user/", {
-      // const response = await axios.get("http://127.0.0.1:8000/api/posts/user/", {
+      const response = await axios.get(`${config.BASE_URL}/posts/user/`, {
         headers: {
           Authorization: `Bearer ${user?.access}`,
         },

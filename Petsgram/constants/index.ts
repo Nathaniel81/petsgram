@@ -1,5 +1,5 @@
 import icons from "./icons";
 import images from "./images";
-import { videos } from "./videos";
+import config from "./config";
 
-export { icons, images, videos };
+export { icons, images, config };

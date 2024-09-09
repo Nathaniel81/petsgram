@@ -6,7 +6,7 @@ import axios from "axios";
 
 import CustomButton from "@/components/CustomButton";
 import FormField from "@/components/FormField";
-import { images } from "../../constants";
+import { images, config } from "../../constants";
 import { useAuth } from "@/context/GlobalProvider";
 
 const SignIn = () => {
@@ -27,15 +27,13 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      const response = await axios.post("https://smooth-cooks-prove.loca.lt/api/user/login/", {
-      // const response = await axios.post("http://127.0.0.1:8000/api/user/login/", {
+      const response = await axios.post(`${config.BASE_URL}/user/login/`, {
         email: form.email,
         password: form.password,
       });
 
       if (response.status === 200) {
         await signIn(response.data);
-        Alert.alert("Success", "User signed in successfully");
         router.replace("/home");
       }
     } catch (error: any) {
