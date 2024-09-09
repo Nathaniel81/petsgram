@@ -27,7 +27,7 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      const response = await axios.post("https://young-towns-study.loca.lt/api/user/login/", {
+      const response = await axios.post("https://smooth-cooks-prove.loca.lt/api/user/login/", {
       // const response = await axios.post("http://127.0.0.1:8000/api/user/login/", {
         email: form.email,
         password: form.password,

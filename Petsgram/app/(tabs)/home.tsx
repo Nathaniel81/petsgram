@@ -18,47 +18,53 @@ import { images } from "../../constants";
 const Home = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const [category, setCategory] = useState("All");
 
-  const onCatChanged = (category: string) => {
-    console.log("Category: ", category);
-    setCategory(category);
+  const onCatChanged = (newCategory: string) => {
+    console.log("Category: ", newCategory);
+    setCategory(newCategory);
+    setPosts([]);
+    fetchPosts(newCategory);
   };
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (selectedCategory: string) => {
     try {
-      // const response = await axios.get("http://127.0.0.1:8000/api/posts/");
-      const response = await axios.get(
-        "https://young-towns-study.loca.lt/api/posts/"
-      );
+      setLoading(true);
+      const endpoint =
+        selectedCategory === "All"
+          ? "https://six-moments-drive.loca.lt/api/posts/"
+          : `https://six-moments-drive.loca.lt/api/posts/?category=${selectedCategory}`;
+
+      const response = await axios.get(endpoint);
       setPosts(response.data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
       Alert.alert("Error", "Could not fetch posts. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false after data is fetched
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(category);
   }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchPosts();
+    await fetchPosts(category);
     setRefreshing(false);
   };
 
-  if (loading) {
+  const renderFooter = () => {
+    if (!refreshing && !loading) return null;
     return (
-      <SafeAreaView className="bg-primary flex-1 justify-center items-center">
+      <View className="py-4">
         <ActivityIndicator size="large" color="#ffffff" />
-      </SafeAreaView>
+      </View>
     );
-  }
+  };
 
   return (
     <SafeAreaView className="bg-primary flex-1">
@@ -82,7 +88,7 @@ const Home = () => {
             />
           </View>
         </View>
-      {/* Category Component */}
+        {/* Category Component */}
         <Category onCagtegoryChanged={onCatChanged} />
       </View>
 
@@ -93,25 +99,32 @@ const Home = () => {
         </Text>
       </View>
 
-      {/* Posts List */}
-      <FlatList
-        data={posts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <PostCard
-            title={item.title}
-            photo={item.image}
-            creator={item.creator.username}
-            avatar={item.creator.profile_picture}
-          />
-        )}
-        ListEmptyComponent={() => (
-          <EmptyState title="No Posts Found" subtitle="No Posts created yet" />
-        )}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
+      {/* Show loading indicator or posts list */}
+      {loading ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#ffffff" />
+        </View>
+      ) : (
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <PostCard
+              title={item.title}
+              photo={item.image}
+              creator={item.creator.username}
+              avatar={item.creator.profile_picture}
+            />
+          )}
+          ListEmptyComponent={() => (
+            <EmptyState title="No Posts Found" subtitle="No Posts created yet" />
+          )}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          ListFooterComponent={renderFooter}
+        />
+      )}
     </SafeAreaView>
   );
 };
