@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { EmptyState, PostCard, Category } from "@/components";
+import { EmptyState, PostCard, Category, SearchInput } from "@/components";
 import { useAuth } from "@/context/GlobalProvider";
 import { IPost } from "@/types";
 import { images, config } from "../../constants";
@@ -36,6 +36,7 @@ const Home = () => {
         selectedCategory === "All"
           ? `${config.BASE_URL}/posts/`
           : `${config.BASE_URL}/posts/?category=${selectedCategory}`;
+
       const response = await axios.get(endpoint);
       setPosts(response.data);
     } catch (error) {
@@ -87,6 +88,7 @@ const Home = () => {
             />
           </View>
         </View>
+        <SearchInput />
         {/* Category Component */}
         <Category onCagtegoryChanged={onCatChanged} />
       </View>
