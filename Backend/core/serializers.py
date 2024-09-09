@@ -1,11 +1,16 @@
 from rest_framework import serializers
-from .models import Post
+from .models import Post, Category
 from cloudinary.utils import cloudinary_url
 from accounts.serializers import UserBasicSerializer
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
 
 class PostSerializer(serializers.ModelSerializer):
     creator = UserBasicSerializer(read_only=True)
+    category = CategorySerializer()
 
     class Meta:
         model = Post
@@ -14,6 +19,7 @@ class PostSerializer(serializers.ModelSerializer):
             'title',
             'creator',
             'image',
+            'category',
             'created_at',
         ]
 

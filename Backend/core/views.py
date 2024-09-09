@@ -4,9 +4,8 @@ from rest_framework.permissions import (IsAuthenticated,
 from rest_framework.views import APIView
 
 from .models import Post
-from .serializers import PostSerializer
+from .serializers import PostSerializer, CategorySerializer
 from rest_framework.response import Response
-
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -14,8 +13,14 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-      print(self.request.data)
-      serializer.save(creator=self.request.user)
+        print(self.request.data)
+        serializer.save(creator=self.request.user)
+
+    def get_queryset(self):
+        category = self.request.query_params.get('category')
+        if category:
+            return Post.objects.filter(category__name=category)
+        return super().get_queryset()
 
 class UserPostListView(APIView):
     serializer_class = PostSerializer
