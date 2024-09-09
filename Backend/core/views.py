@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from .models import Post
 from .serializers import PostSerializer, CategorySerializer
 from rest_framework.response import Response
+from django.db.models import Q
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -17,10 +18,19 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.save(creator=self.request.user)
 
     def get_queryset(self):
+        queryset = super().get_queryset()
+        
         category = self.request.query_params.get('category')
         if category:
-            return Post.objects.filter(category__name=category)
-        return super().get_queryset()
+            queryset = queryset.filter(category__name=category)
+        
+        query = self.request.query_params.get('q')
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query)
+            )
+
+        return queryset
 
 class UserPostListView(APIView):
     serializer_class = PostSerializer
