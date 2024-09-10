@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from "react-native";
 
-import { icons } from "../../constants";
+import { icons, config } from "../../constants";
 import { CustomButton, FormField } from "../../components";
 import { useAuth } from "@/context/GlobalProvider";
 import axios from "axios";
@@ -50,7 +50,6 @@ const Create = () => {
     }
   };
 
-  // Your existing submit function
   const submit = async () => {
     if (form.title === "" || !form.image) {
       return Alert.alert("Please provide all fields");
@@ -71,7 +70,7 @@ const Create = () => {
   
       console.log("Form Data:", formData);
   
-      const response = await axios.post("https://few-keys-decide.loca.lt/api/posts/", formData, {
+      const response = await axios.post(`${config.BASE_URL}/posts/`, formData, {
         headers: {
           Authorization: `Bearer ${user?.access}`,
           'Content-Type': 'multipart/form-data',
