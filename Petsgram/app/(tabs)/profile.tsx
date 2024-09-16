@@ -3,7 +3,14 @@ import { IPost } from "@/types";
 import axios from "axios";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, FlatList, Image, TouchableOpacity, View } from "react-native";
+import { 
+  Alert, 
+  FlatList, 
+  Image, 
+  TouchableOpacity, 
+  View, 
+  ActivityIndicator 
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EmptyState, InfoBox, PostCard } from "../../components";
 import { icons, images, config } from "../../constants";
@@ -11,6 +18,7 @@ import { icons, images, config } from "../../constants";
 const Profile = () => {
   const { user, signOut } = useAuth();
   const [userPosts, setUserPosts] = useState<IPost[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const logout = async () => {
     await signOut();
@@ -18,6 +26,7 @@ const Profile = () => {
   };
 
   const fetchPosts = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${config.BASE_URL}/posts/user/`, {
         headers: {
@@ -28,16 +37,22 @@ const Profile = () => {
     } catch (error) {
       console.error("Failed to fetch posts:", error);
       Alert.alert("Error", "Could not fetch posts. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    console.log(user)
     fetchPosts();
   }, []);
 
   return (
     <SafeAreaView className="bg-primary h-full">
+      {loading ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#ffffff" />
+        </View>
+      ) : (
       <FlatList
         data={userPosts}
         keyExtractor={(item) => item.id.toString()}
@@ -98,6 +113,7 @@ const Profile = () => {
           </View>
         )}
       />
+      )}
     </SafeAreaView>
   );
 };
