@@ -8,7 +8,7 @@ __pycache__/
 db.sqlite3
 
 # Virtual Environment
-/petenv
+/petsenv
 .env/
 
 /Stp.txt
