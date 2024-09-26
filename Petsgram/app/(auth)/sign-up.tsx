@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 import axios from "axios";
 
-import { images } from "../../constants";
+import { images, config } from "../../constants";
 import CustomButton from "@/components/CustomButton";
 import FormField from "@/components/FormField";
 import { useAuth } from "@/context/GlobalProvider";
@@ -21,15 +21,17 @@ const SignUp = () => {
   const { signIn } = useAuth();
 
   const submit = async () => {
-    if (form.username === "" || form.email === "" || form.password === "" || form.confirmPassword === "") {
+    if (form.username === "" 
+      || form.email === "" 
+      || form.password === "" 
+      || form.confirmPassword === "") {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
     setSubmitting(true);
     try {
-      // const response = await axios.post("https://great-rules-burn.loca.lt/api/user/register/", {
-      const response = await axios.post("http://127.0.0.1:8000/api/user/register/", {
+      const response = await axios.post(`${config.BASE_URL}/user/register/`, {
         username: form.username,
         email: form.email,
         password: form.password,

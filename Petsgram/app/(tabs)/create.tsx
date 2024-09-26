@@ -60,40 +60,51 @@ const Create = () => {
       const formData = new FormData();
       formData.append("title", form.title);
   
-      const file = new File(
-        [await (await fetch(form.image.uri)).blob()],
-        form.image.uri.split('/').pop() || "image.jpg",
-        { type: form.image.type || "image/jpeg" }
-      );
+      const localUri = form.image.uri;
+      const filename = localUri.split('/').pop() || "default-filename.jpg";
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
   
-      formData.append("image", file);
-  
+      // @ts-ignore
+      formData.append("image", { uri: localUri, name: filename, type });
       console.log("Form Data:", formData);
   
-      const response = await axios.post(`${config.BASE_URL}/posts/`, formData, {
+      const uploadResponse = await axios.post(`${config.BASE_URL}/posts/`, formData, {
         headers: {
           Authorization: `Bearer ${user?.access}`,
           'Content-Type': 'multipart/form-data',
         },
       });
   
-      if (response.status === 201) {
+      if (uploadResponse.status === 201) {
         Alert.alert("Success", "Post uploaded successfully");
         router.push("/home");
       }
     } catch (error: any) {
-      console.error("Upload Error:", error.message);
-      Alert.alert("Error", error.message || "An error occurred.");
+      console.error("Upload Error:", error.response?.data);
+  
+      // Extracting and cleaning the error message
+      let errorMessage = "An error occurred.";
+      
+      if (error.response?.data?.image?.image) {
+        const rawErrorMessage = error.response.data.image.image;
+  
+        // Clean the error message: remove ErrorDetail wrapper and brackets
+        errorMessage = rawErrorMessage.replace(/ErrorDetail\(string='(.+?)',.*\)/, '$1').replace(/[\[\]]/g, '');
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+  
+      Alert.alert("Error", errorMessage);
     } finally {
       setForm({
         title: "",
         image: null,
       });
-  
       setUploading(false);
     }
-  };
-  
+  };  
+          
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView className="px-4 my-6">
@@ -108,7 +119,7 @@ const Create = () => {
           <FormField
             title="Photo Title"
             value={form.title}
-            placeholder="Give your video a catchy title..."
+            placeholder="Give your post a catchy title..."
             handleChangeText={(e: string) => setForm({ ...form, title: e })}
             otherStyles="mt-10"
           />

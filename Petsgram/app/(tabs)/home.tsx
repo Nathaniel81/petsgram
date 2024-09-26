@@ -1,5 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -10,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { EmptyState, PostCard, Category, SearchInput } from "@/components";
+import { EmptyState, PostCard, SearchInput } from "@/components";
 import { useAuth } from "@/context/GlobalProvider";
 import { IPost } from "@/types";
 import { images, config } from "../../constants";
@@ -19,24 +21,13 @@ const Home = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const { user } = useAuth();
-  const [category, setCategory] = useState("All");
 
-  const onCatChanged = (newCategory: string) => {
-    console.log("Category: ", newCategory);
-    setCategory(newCategory);
-    setPosts([]);
-    fetchPosts(newCategory);
-  };
-
-  const fetchPosts = async (selectedCategory: string) => {
+  const fetchPosts = async () => {
     try {
       setLoading(true);
-      const endpoint =
-        selectedCategory === "All"
-          ? `${config.BASE_URL}/posts/`
-          : `${config.BASE_URL}/posts/?category=${selectedCategory}`;
-
+      const endpoint = `${config.BASE_URL}/posts/`;
       const response = await axios.get(endpoint);
       setPosts(response.data);
     } catch (error) {
@@ -44,16 +35,19 @@ const Home = () => {
       Alert.alert("Error", "Could not fetch posts. Please try again.");
     } finally {
       setLoading(false);
+      setInitialLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchPosts(category);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchPosts();
+    }, [])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchPosts(category);
+    await fetchPosts();
     setRefreshing(false);
   };
 
@@ -89,8 +83,6 @@ const Home = () => {
           </View>
         </View>
         <SearchInput />
-        {/* Category Component */}
-        <Category onCagtegoryChanged={onCatChanged} />
       </View>
 
       {/* Latest Posts Section */}
@@ -101,10 +93,12 @@ const Home = () => {
       </View>
 
       {/* Show loading indicator or posts list */}
-      {loading ? (
+      {initialLoading ? (
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#ffffff" />
         </View>
+      ) : posts.length === 0 ? (
+        <EmptyState title="No Posts Found" subtitle="No Posts created yet" />
       ) : (
         <FlatList
           data={posts}
@@ -116,9 +110,6 @@ const Home = () => {
               creator={item.creator.username}
               avatar={item.creator.profile_picture}
             />
-          )}
-          ListEmptyComponent={() => (
-            <EmptyState title="No Posts Found" subtitle="No Posts created yet" />
           )}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
