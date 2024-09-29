@@ -58,11 +58,6 @@ const Profile = () => {
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#ffffff" />
         </View>
-      ) : userPosts.length === 0 ? (
-        <EmptyState
-          title="No Videos Found"
-          subtitle="No videos found for this profile"
-        />
       ) : (
         <FlatList
           data={userPosts}
@@ -77,6 +72,7 @@ const Profile = () => {
           )}
           ListHeaderComponent={() => (
             <View className="w-full flex justify-center items-center mt-6 mb-12 px-4">
+              {/* Logout Button */}
               <TouchableOpacity
                 onPress={logout}
                 className="flex w-full items-end mb-10"
@@ -120,6 +116,12 @@ const Profile = () => {
                 />
               </View>
             </View>
+          )}
+          ListEmptyComponent={() => (
+            <EmptyState
+              title="No Videos Found"
+              subtitle="No videos found for this profile"
+            />
           )}
         />
       )}
