@@ -1,10 +1,11 @@
-import profile from "../assets/images/profile.png";
-import thumbnail from "../assets/images/thumbnail.png";
-import cards from "../assets/images/cards.png";
 import path from "../assets/images/path.png";
-import logo from "../assets/images/logo.png";
-import logoSmall from "../assets/images/logo-small.png";
+import logo_3 from "../assets/images/logo_3.png";
 import empty from "../assets/images/empty.png";
 import profilePlaceholder from "../assets/images/profile-placeholder.png"
 
-export default { profile, thumbnail, cards, path, logo, logoSmall, empty, profilePlaceholder };
+export default { 
+	path, 
+	logo_3,
+	empty, 
+	profilePlaceholder 
+};

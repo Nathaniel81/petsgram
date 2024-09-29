@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import { 
+  View, 
+  Text, 
+  ScrollView, 
+  Dimensions, 
+  Alert, 
+  Image 
+} from "react-native";
 import axios from "axios";
 
 import { images, config } from "../../constants";
@@ -59,15 +66,15 @@ const SignUp = () => {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View
-          className="w-full flex justify-center h-full px-4 my-6"
+          className="w-full flex justify-center h-full px-4 my-4"
           style={{
             minHeight: Dimensions.get("window").height - 100,
           }}
         >
           <Image
-            source={images.logo}
-            resizeMode="contain"
-            className="w-[115px] h-[34px]"
+            source={images.logo_3}
+            resizeMode="cover"
+            className="w-[100px] h-[100px]"
           />
 
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
