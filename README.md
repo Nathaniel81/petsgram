@@ -31,4 +31,15 @@ This project was built as a personal hobby project to demonstrate my skills in b
 
 Here is a demo of the Petsgram app in action:
 
-[Watch the demo](https://youtu.be/dO8JyDXQiPI)
+## Live Demo
+
+Here is a demo of the Petsgram app in action:
+
+[![Petsgram Demo](https://img.youtube.com/vi/)](https://youtu.be/AijC5ycJ1Pg)
+
+<p align="center">
+  <a href="https://youtu.be/AijC5ycJ1Pg" target="_blank">
+    <img src="" alt="Petsgram Demo" width="480" height="270">
+  </a>
+</p>
+
