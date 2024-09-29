@@ -29,6 +29,7 @@ This project was built as a personal hobby project to demonstrate my skills in b
 
 ## Live Demo
 Here is a demo of the Petsgram app in action:
+
 [Watch the demo on YouTube](https://youtu.be/AijC5ycJ1Pg)
 
 
