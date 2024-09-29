@@ -35,11 +35,6 @@ Here is a demo of the Petsgram app in action:
 
 Here is a demo of the Petsgram app in action:
 
-[![Petsgram Demo](https://img.youtube.com/vi/)](https://youtu.be/AijC5ycJ1Pg)
+[Watch the demo on YouTube](https://www.youtube.com/watch?v=dO8JyDXQiPI)
 
-<p align="center">
-  <a href="https://youtu.be/AijC5ycJ1Pg" target="_blank">
-    <img src="" alt="Petsgram Demo" width="480" height="270">
-  </a>
-</p>
 
