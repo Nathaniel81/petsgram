@@ -26,3 +26,9 @@ The validation ensures only genuine pet photos are uploaded, improving the overa
 
 ## Project Purpose:
 This project was built as a personal hobby project to demonstrate my skills in building full-stack applications using React Native, Django, and AI integration with MobileNet. It showcases my ability to handle both frontend and backend development, and includes a practical implementation of machine learning in image validation.
+
+## Live Demo
+
+Here is a demo of the Petsgram app in action:
+
+![Petsgram Demo](petsgram-demo.gif)
