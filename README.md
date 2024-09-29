@@ -31,4 +31,4 @@ This project was built as a personal hobby project to demonstrate my skills in b
 
 Here is a demo of the Petsgram app in action:
 
-![Petsgram Demo](petsgram-demo.gif)
+[Watch the demo](./Petsgram/assets/petsgram-demo.mp4)
