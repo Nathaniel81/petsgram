@@ -1,0 +1,18 @@
+# Exclude node_modules to reduce size
+node_modules/
+
+# Exclude builds
+.gradle/
+.idea/
+.expo/
+.expo-shared/
+
+# Exclude logs and temporary files
+*.log
+*.tmp
+.DS_Store
+
+# Exclude any unnecessary media
+*.png
+*.jpg
+*.mp4

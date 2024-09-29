@@ -6,6 +6,7 @@ import EmptyState from "./EmptyState";
 import InfoBox from "./InfoBox";
 import Category from "./Category";
 import SearchInput from "./SearchInput";
+import SplashScreen from "./SplashScreen";
 
 export {
   PostCard,
@@ -15,5 +16,6 @@ export {
   EmptyState,
   InfoBox,
   Category,
-  SearchInput
+  SearchInput,
+  SplashScreen
 };

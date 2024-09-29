@@ -4,22 +4,19 @@
     "slug": "Petsgram",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo_3.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.natexpo.Petsgram"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.natexpo.Petsgram"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +29,17 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c51b9548-1592-4179-9e80-d0f2f5e7ae6b"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/c51b9548-1592-4179-9e80-d0f2f5e7ae6b"
     }
   }
 }
